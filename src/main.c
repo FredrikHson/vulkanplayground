@@ -5,6 +5,9 @@
 #include <vulkan/vulkan.h>
 
 #define fprintvari(x) fprintf(stdout,"|-- %s:%i\n",#x,x)
+#define fprintvarl(x) fprintf(stdout,"|-- %s:%ld\n",#x,x)
+#define fprintvarf(x) fprintf(stdout,"|-- %s:%f\n",#x,x)
+#define fprintvarul(x) fprintf(stdout,"|-- %s:%lu\n",#x,x)
 
 void printlimits(VkPhysicalDeviceLimits limits)
 {
@@ -19,8 +22,8 @@ void printlimits(VkPhysicalDeviceLimits limits)
     fprintvari(limits.maxPushConstantsSize);
     fprintvari(limits.maxMemoryAllocationCount);
     fprintvari(limits.maxSamplerAllocationCount);
-    fprintvari(limits.bufferImageGranularity);
-    fprintvari(limits.sparseAddressSpaceSize);
+    fprintvarul(limits.bufferImageGranularity);
+    fprintvarul(limits.sparseAddressSpaceSize);
     fprintvari(limits.maxBoundDescriptorSets);
     fprintvari(limits.maxPerStageDescriptorSamplers);
     fprintvari(limits.maxPerStageDescriptorUniformBuffers);
@@ -72,24 +75,24 @@ void printlimits(VkPhysicalDeviceLimits limits)
     fprintvari(limits.mipmapPrecisionBits);
     fprintvari(limits.maxDrawIndexedIndexValue);
     fprintvari(limits.maxDrawIndirectCount);
-    fprintvari(limits.maxSamplerLodBias);
-    fprintvari(limits.maxSamplerAnisotropy);
+    fprintvarf(limits.maxSamplerLodBias);
+    fprintvarf(limits.maxSamplerAnisotropy);
     fprintvari(limits.maxViewports);
     fprintvari(limits.maxViewportDimensions[0]);
     fprintvari(limits.maxViewportDimensions[1]);
-    fprintvari(limits.viewportBoundsRange[0]);
-    fprintvari(limits.viewportBoundsRange[1]);
+    fprintvarf(limits.viewportBoundsRange[0]);
+    fprintvarf(limits.viewportBoundsRange[1]);
     fprintvari(limits.viewportSubPixelBits);
-    fprintvari(limits.minMemoryMapAlignment);
-    fprintvari(limits.minTexelBufferOffsetAlignment);
-    fprintvari(limits.minUniformBufferOffsetAlignment);
-    fprintvari(limits.minStorageBufferOffsetAlignment);
+    fprintvarl(limits.minMemoryMapAlignment);
+    fprintvarl(limits.minTexelBufferOffsetAlignment);
+    fprintvarl(limits.minUniformBufferOffsetAlignment);
+    fprintvarl(limits.minStorageBufferOffsetAlignment);
     fprintvari(limits.minTexelOffset);
     fprintvari(limits.maxTexelOffset);
     fprintvari(limits.minTexelGatherOffset);
     fprintvari(limits.maxTexelGatherOffset);
-    fprintvari(limits.minInterpolationOffset);
-    fprintvari(limits.maxInterpolationOffset);
+    fprintvarf(limits.minInterpolationOffset);
+    fprintvarf(limits.maxInterpolationOffset);
     fprintvari(limits.subPixelInterpolationOffsetBits);
     fprintvari(limits.maxFramebufferWidth);
     fprintvari(limits.maxFramebufferHeight);
@@ -106,22 +109,22 @@ void printlimits(VkPhysicalDeviceLimits limits)
     fprintvari(limits.storageImageSampleCounts);
     fprintvari(limits.maxSampleMaskWords);
     fprintvari(limits.timestampComputeAndGraphics);
-    fprintvari(limits.timestampPeriod);
+    fprintvarf(limits.timestampPeriod);
     fprintvari(limits.maxClipDistances);
     fprintvari(limits.maxCullDistances);
     fprintvari(limits.maxCombinedClipAndCullDistances);
     fprintvari(limits.discreteQueuePriorities);
-    fprintvari(limits.pointSizeRange[0]);
-    fprintvari(limits.pointSizeRange[1]);
-    fprintvari(limits.lineWidthRange[0]);
-    fprintvari(limits.lineWidthRange[1]);
-    fprintvari(limits.pointSizeGranularity);
-    fprintvari(limits.lineWidthGranularity);
+    fprintvarf(limits.pointSizeRange[0]);
+    fprintvarf(limits.pointSizeRange[1]);
+    fprintvarf(limits.lineWidthRange[0]);
+    fprintvarf(limits.lineWidthRange[1]);
+    fprintvarf(limits.pointSizeGranularity);
+    fprintvarf(limits.lineWidthGranularity);
     fprintvari(limits.strictLines);
     fprintvari(limits.standardSampleLocations);
-    fprintvari(limits.optimalBufferCopyOffsetAlignment);
-    fprintvari(limits.optimalBufferCopyRowPitchAlignment);
-    fprintvari(limits.nonCoherentAtomSize);
+    fprintvarl(limits.optimalBufferCopyOffsetAlignment);
+    fprintvarl(limits.optimalBufferCopyRowPitchAlignment);
+    fprintvarl(limits.nonCoherentAtomSize);
 }
 
 int main(int argc, char* argv[])
@@ -142,9 +145,7 @@ int main(int argc, char* argv[])
     };
     createInfo.ppEnabledExtensionNames = extnames;
     createInfo.enabledExtensionCount = 2;
-
     VkInstance instance;
-
     VkResult result = vkCreateInstance(&createInfo, 0, &instance);
 
     if(result == VK_SUCCESS)
@@ -169,22 +170,17 @@ int main(int argc, char* argv[])
         {
             devices = malloc(devicecount * sizeof(VkPhysicalDevice));
             deviceproperties = malloc(devicecount * sizeof(VkPhysicalDeviceProperties));
-
             result = vkEnumeratePhysicalDevices(instance, &devicecount, devices);
 
             if(result == VK_SUCCESS)
             {
-
                 for(int i = 0; i < devicecount; i++)
                 {
                     vkGetPhysicalDeviceProperties(devices[i], &deviceproperties[i]);
-
-
                     fprintf(stdout, "Device Name:    %s\n", deviceproperties[i].deviceName);
                     fprintf(stdout, "Device Type:    %d\n", deviceproperties[i].deviceType);
                     fprintf(stdout, "Driver Version: %d\n", deviceproperties[i].driverVersion);
                     printlimits(deviceproperties[i].limits);
-
                 }
             }
             else
@@ -200,7 +196,6 @@ int main(int argc, char* argv[])
 
         if(displayenv == 0)
         {
-
             fprintf(stderr, "DISPLAY not set\n");
         }
         else
@@ -218,7 +213,6 @@ int main(int argc, char* argv[])
     {
         free(deviceproperties);
     }
-
 
     vkDestroyInstance(instance, 0);
     return 0;
